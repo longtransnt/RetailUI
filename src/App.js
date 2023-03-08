@@ -18,6 +18,7 @@ import "./assets/scss/light-bootstrap-dashboard-react.scss?v=2.0.0";
 import "./assets/css/demo.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Dashboard from "views/Dashboard";
+import PriceTable from "views/PriceTable";
 const ROLES = {
   User: 2001,
   Editor: 1984,
@@ -29,6 +30,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
         {/* public routes */}
+        <Route path="price" element={<PriceTable />}></Route>
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="linkpage" element={<LinkPage />} />

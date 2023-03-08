@@ -17,6 +17,23 @@ input_form {
   font-weight: bold;
 }
 
+.pricetable * {
+  font-size: 1.8vw;
+  font-weight: bold;
+  color: orange;
+}
+
+.pricelogo {
+  max-height: 10px;
+}
+
+.priceheader * {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: orange;
+}
+
 .buttonrow {
   display: flex;
   justify-content: left;

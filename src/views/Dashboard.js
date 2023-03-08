@@ -4,6 +4,7 @@ import axios from "axios";
 import balanceServices from "../services/balanceServices";
 import transactionServices from "services/transactionServices";
 // react-bootstrap components
+import { UPDATE_INTERVAL } from "../constant";
 import {
   Badge,
   Button,
@@ -23,8 +24,6 @@ import debtServices from "services/debtServices";
 function Dashboard() {
   const [balance, setBalance] = useState([]);
   const [debtDatas, setDebtData] = useState({});
-
-  const UPDATE_INTERVAL = 60000; // 60S
 
   const getBalance = async () => {
     let balances = await balanceServices.getLatestBalance();

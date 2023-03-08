@@ -7,7 +7,7 @@ const Home = () => {
 
   const signOut = async () => {
     await logout();
-    navigate("/NavLinkpage");
+    navigate("/");
   };
 
   return (
@@ -22,7 +22,7 @@ const Home = () => {
       <br />
       <NavLink to="/lounge">Go to the Lounge</NavLink>
       <br />
-      <NavLink to="/NavLinkpage">Go to the NavLink page</NavLink>
+      <NavLink to="/">Go to the NavLink page</NavLink>
       <div className="flexGrow">
         <button onClick={signOut}>Sign Out</button>
       </div>

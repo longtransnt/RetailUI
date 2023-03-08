@@ -13,12 +13,13 @@ import AdminNavbar from "components/Navbars/AdminNavbar";
 import Footer from "components/Footer/Footer";
 import Sidebar from "components/Sidebar/Sidebar";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
-
+import PriceTable from "views/PriceTable";
 import routes from "../routes";
 import addDebts from "views/AddDebt";
 import sidebarImage from "assets/img/sidebar-3.jpg";
 import Dashboard from "views/Dashboard";
 import User from "views/UserProfile";
+import AddPrice from "views/AddPrice";
 import AddDebt from "views/AddDebt";
 import SheetImport from "views/SheetImport";
 const Admin = () => {
@@ -65,7 +66,9 @@ const Admin = () => {
             <Routes>
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="debts" element={<AddDebt />} />
-              <Route path="sheetimport" element={<SheetImport />}></Route>
+              <Route path="sheetimport" element={<SheetImport />} />
+              <Route path="table" element={<PriceTable />} />
+              <Route path="addprice" element={<AddPrice />} />
             </Routes>
           </div>
           <Footer />
