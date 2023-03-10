@@ -6,7 +6,7 @@ import Footer from "components/Footer/Footer";
 import Sidebar from "components/Sidebar/Sidebar";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 import Dashboard from "views/Dashboard";
-import routes from "routes.js";
+import routes from "routes/adminroutes";
 
 import sidebarImage from "assets/img/sidebar-3.jpg";
 

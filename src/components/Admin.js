@@ -14,7 +14,7 @@ import Footer from "components/Footer/Footer";
 import Sidebar from "components/Sidebar/Sidebar";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 import PriceTable from "views/PriceTable";
-import routes from "../routes";
+import routes from "../routes/adminroutes";
 import addDebts from "views/AddDebt";
 import sidebarImage from "assets/img/sidebar-3.jpg";
 import Dashboard from "views/Dashboard";

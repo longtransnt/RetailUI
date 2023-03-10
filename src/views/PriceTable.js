@@ -60,14 +60,14 @@ function PriceTable() {
           <Col md="2"></Col>
           <Col md="1">
             <img
-              style={{ height: 90 }}
-              src={require("./../assets/img/logo.jpg")}
+              style={{ height: 100 }}
+              src={require("./../assets/img/logo512.png")}
             />
           </Col>
           <Col md="7">
-            <h3 style={{ fontWeight: "bold", color: "orange" }}>
+            <h2 style={{ fontWeight: "bold", color: "orange" }}>
               DNTN Kinh Doanh Vàng và Cầm Đồ Trọng Nghĩa
-            </h3>
+            </h2>
           </Col>
         </Row>
         <Row className="pricetable">

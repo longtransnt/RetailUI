@@ -26,7 +26,7 @@ import {
   Button,
 } from "react-bootstrap";
 
-import routes from "routes.js";
+import routes from "routes/adminroutes";
 
 function Header() {
   const location = useLocation();
