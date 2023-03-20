@@ -25,7 +25,7 @@
     "xlsx": "^0.18.5"
   },
   "scripts": {
-    "preinstall": "npm install chartist --save.",
+    "preinstall": "npm install --save",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
