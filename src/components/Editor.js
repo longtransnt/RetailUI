@@ -26,6 +26,7 @@ import Upgrade from "views/Upgrade";
 import Notifications from "views/Notifications";
 import Icons from "views/Icons";
 import Typography from "views/Typography";
+import Repay from "views/Repay";
 
 const Editor = () => {
   const [image, setImage] = React.useState(sidebarImage);
@@ -59,10 +60,11 @@ const Editor = () => {
               <Route path="sheetimport" element={<SheetImport />} />
               <Route path="price" element={<PriceTable />} />
               <Route path="addprice" element={<AddPrice />} />
+              {/* <Route path="repay" element={<Repay />} /> */}
               {/* 
               <Route path="notifications" element={<Notifications />} />
-              <Route path="typography" element={<Typography />} />
-              <Route path="icons" element={<Icons />} /> */}
+  <Route path="typography" element={<Typography />} /> */}
+              {/* <Route path="icons" element={<Icons />} /> */}
             </Routes>
           </div>
           <Footer />

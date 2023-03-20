@@ -10,7 +10,10 @@ import {
   Container,
   Row,
   Col,
+  Alert,
 } from "react-bootstrap";
+import transactionServices from "services/transactionServices";
+import NotificationAlert from "react-notification-alert";
 
 const SheetImport = () => {
   const [bankFormat, setBankFormat] = useState("");
@@ -20,30 +23,81 @@ const SheetImport = () => {
   const formatTransaction = (transactions) => {
     let dataChart = [];
     let totalMoney = 0;
+    let current_date = "";
 
     transactions.forEach(function (transaction) {
       let value = "";
-      if (bankFormat == "VTB") {
+      let real = 0;
+      if (bankFormat === "VTB") {
         value = transaction["1900-55-88-68\ncontact@vietinbank.vn"];
+        real = parseFloat(value.replace(/,/g, ""));
         dataChart.push({
           id: transaction["__EMPTY"],
           date: transaction["__EMPTY_1"],
           content: transaction["__EMPTY_2"],
           value: value,
+          real_value: real,
         });
-      } else if (bankFormat == "VCB") {
+      } else if (bankFormat === "VCB") {
+        // console.log(transaction);
         if (+transaction["__EMPTY_1"]) {
           value = transaction["SAO KÊ TÀI KHOẢN\nSTATEMENT OF ACCOUNT"];
+          real = parseFloat(value.replace(/,/g, ""));
+
+          if (value === "") {
+            value = transaction["__EMPTY_3"];
+            real = -1 * parseFloat(value.replace(/,/g, ""));
+            // console.log(real);
+          }
+
+          const day_array = transaction["__EMPTY_2"].split("\n");
           dataChart.push({
             id: transaction["__EMPTY_1"],
-            date: transaction["__EMPTY_2"],
+            date: day_array[0],
             content: transaction["__EMPTY_5"],
             value: value,
+            real_value: real,
+          });
+        }
+      } else if (bankFormat === "SCB") {
+        // Get current transaction date
+        const date_string = transaction["__EMPTY_4"].split(" ");
+
+        // If the date has not been initialized, and the date string is not error
+        if (current_date === "" && date_string[0] !== undefined) {
+          current_date = date_string[0];
+        }
+
+        // If the date is initialized, and current date stay the same
+        if (
+          date_string[0] !== undefined &&
+          current_date !== "" &&
+          date_string[0] === current_date
+        ) {
+          // Get value and real value
+          value = transaction["__EMPTY_18"] + "";
+          real = parseFloat(value.replaceAll(".", ""));
+
+          // If real value is error, check the negative error
+          if (value === "undefined") {
+            value = transaction["__EMPTY_16"] + "";
+            real = -1 * parseFloat(value.replaceAll(".", ""));
+          }
+
+          const format_date = current_date.replaceAll("-", "/");
+
+          // Push data in data frame
+          dataChart.push({
+            id: transaction["__EMPTY_1"],
+            date: format_date,
+            content: transaction["__EMPTY_12"],
+            value: value,
+            real_value: real,
           });
         }
       }
+      // Count total gain money and output to UI
       if (value !== undefined) {
-        let real = parseFloat(value.replace(/,/g, ""));
         if (real > 0) {
           totalMoney += real;
         }
@@ -52,10 +106,11 @@ const SheetImport = () => {
 
     setData(dataChart);
     setTotalMoney(totalMoney);
-    // console.log(totalMoney);
+    // console.log(dataChart);
   };
 
   const handleImport = ($event) => {
+    // ".toast".toast(option);
     const files = $event.target.files;
     if (files.length) {
       const file = files[0];
@@ -66,12 +121,15 @@ const SheetImport = () => {
 
         if (sheets.length) {
           const rows = utils.sheet_to_json(wb.Sheets[sheets[0]]);
-          // console.log(rows);
-          if (bankFormat == "VCB") {
+          if (bankFormat === "VCB") {
             rows.splice(0, 10);
-          } else if (bankFormat == "VTB") {
+          } else if (bankFormat === "VTB") {
             rows.splice(0, 3);
+          } else if (bankFormat === "SCB") {
+            rows.splice(0, 22);
           }
+          // console.log(rows);
+
           formatTransaction(rows);
         }
       };
@@ -80,13 +138,11 @@ const SheetImport = () => {
   };
 
   const handleExport = () => {
-    const headings = [["STT", "Ngày", "Nội Dung", "Số Tiền GĐ"]];
-    const wb = utils.book_new();
-    const ws = utils.json_to_sheet([]);
-    utils.sheet_add_aoa(ws, headings);
-    utils.sheet_add_json(ws, data, { origin: "A2", skipHeader: true });
-    utils.book_append_sheet(wb, ws, "Report");
-    writeFile(wb, "transaction Report.xlsx");
+    for (let index = 0; index < data.length; index++) {
+      const element = data[index];
+      transactionServices.postTransaction(element, bankFormat);
+    }
+    alert("Upload success!");
   };
 
   return (
@@ -104,14 +160,24 @@ const SheetImport = () => {
             >
               <option defaultValue=""></option>
               <option value="VCB">Vietcombank</option>
+              <option value="SCB">Sacombank</option>
               <option value="VTB">Vietinbank</option>
             </Form.Control>
+            <br />
+            <div className="col-md-7">
+              <button
+                onClick={handleExport}
+                className="btn btn-primary float-right"
+              >
+                Tải lên CSDL <i className="fa fa-upload"></i>
+              </button>
+            </div>
           </Col>
           <Col md="6">
             <div className="row mb-2 mt-5">
               <div className="col-sm-6 offset-3">
                 <div className="row">
-                  <div className="col-md-6">
+                  <div className="col-md-4">
                     <div className="input-group">
                       <div className="custom-file">
                         <input
@@ -126,15 +192,6 @@ const SheetImport = () => {
                       </div>
                     </div>
                   </div>
-                  {/* <div className="col-md-6">
-                    <button
-                      disabled
-                      onClick={handleExport}
-                      className="btn btn-primary float-right"
-                    >
-                      Export <i className="fa fa-download"></i>
-                    </button>
-                  </div> */}
                 </div>
               </div>
             </div>
@@ -172,10 +229,17 @@ const SheetImport = () => {
                         <th scope="row">{index + 1}</th>
                         <td>{transaction.date}</td>
                         <td>{transaction.content}</td>
+
                         <td>
-                          <span className="badge bg-warning text-dark">
-                            {transaction.value}
-                          </span>
+                          {transaction.real_value < 0 ? (
+                            <span className="badge bg-danger text-white">
+                              - {transaction.value}
+                            </span>
+                          ) : (
+                            <span className="badge bg-info text-white">
+                              {transaction.value}
+                            </span>
+                          )}
                         </td>
                       </tr>
                     ))

@@ -13,4 +13,11 @@ async function getAllEmployees() {
   return employees.data.rows;
 }
 
-export default {};
+async function addEmployee(data) {
+  console.log(data);
+  await axios
+    .post(EMPLOY_API, data, axiosConfig)
+    .then((response) => console.log(response.data));
+}
+
+export default { addEmployee };

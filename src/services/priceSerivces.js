@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LOCALHOST, PRICE_API } from "../constant";
+import { LATEST_PRICE, LOCALHOST, PRICE_API } from "../constant";
 
 let axiosConfig = {
   headers: {
@@ -9,7 +9,7 @@ let axiosConfig = {
 };
 
 async function getLatestPrice() {
-  const price = await axios.get(PRICE_API + "/allcategory/1", axiosConfig);
+  const price = await axios.get(LATEST_PRICE, axiosConfig);
   //   console.log(price);
   return price.data;
 }
@@ -18,7 +18,7 @@ async function addPrice(data, category) {
   let req_data = {
     price: data.price,
     sellprice: data.sellprice,
-    categoryid: Number(category) + 1,
+    categoryid: Number(category) + 0,
   };
 
   await axios.post(PRICE_API, req_data, axiosConfig);

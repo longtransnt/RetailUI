@@ -59,6 +59,13 @@ const dashboardRoutes = [
     component: AddDebt,
     layout: "/editor",
   },
+  {
+    path: "/repay",
+    name: "Trả Nợ",
+    icon: "nc-icon nc-money-coins",
+    component: AddDebt,
+    layout: "/editor",
+  },
 ];
 
 export default dashboardRoutes;

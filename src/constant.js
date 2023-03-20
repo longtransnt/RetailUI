@@ -1,13 +1,17 @@
-const HOST = "http://localhost:8080";
+const LOCALHOST = "http://localhost:8080";
+const DEPLOYED = "http://retail-mgt-backend.herokuapp.com";
+const HOST = LOCALHOST;
 const DEBT_API = HOST + "/api/debts";
-const EMPLOY_API = HOST + "/api/employees";
+const EMPLOY_API = HOST + "/employees";
 const TRANSACTION_API = HOST + "/api/transactions";
 const BALANCE_API = HOST + "/api/balances";
 const PRICE_API = HOST + "/api/goldprice";
+const LATEST_PRICE = HOST + "/api/goldpricelatest";
 const UPDATE_INTERVAL = 60 * 1000; // 60S
 
 export {
   HOST,
+  LATEST_PRICE,
   BALANCE_API,
   TRANSACTION_API,
   EMPLOY_API,
