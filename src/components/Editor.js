@@ -53,21 +53,16 @@ const Editor = () => {
       <div>
         <Sidebar color={color} image={hasImage ? image : ""} routes={routes} />
         <div className="main-panel" ref={mainPanel}>
-          <AdminNavbar />
+          {/* <AdminNavbar /> */}
           <div className="content">
             <Routes>
               <Route path="adddebt" element={<AddDebt />} />
               <Route path="sheetimport" element={<SheetImport />} />
               <Route path="price" element={<PriceTable />} />
               <Route path="addprice" element={<AddPrice />} />
-              {/* <Route path="repay" element={<Repay />} /> */}
-              {/* 
-              <Route path="notifications" element={<Notifications />} />
-  <Route path="typography" element={<Typography />} /> */}
-              {/* <Route path="icons" element={<Icons />} /> */}
             </Routes>
           </div>
-          <Footer />
+          {/* <Footer /> */}
         </div>
       </div>
       <FixedPlugin

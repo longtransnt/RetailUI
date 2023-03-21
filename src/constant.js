@@ -1,6 +1,6 @@
 const LOCALHOST = "http://localhost:8080";
-const DEPLOYED = "https://retail-mgt-backend.herokuapp.com";
-const HOST = DEPLOYED;
+const DEPLOYED = "http://retail-mgt-backend.herokuapp.com";
+const HOST = LOCALHOST;
 const DEBT_API = HOST + "/api/debts";
 const EMPLOY_API = HOST + "/employees";
 const TRANSACTION_API = HOST + "/api/transactions";
