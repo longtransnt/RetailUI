@@ -7,7 +7,7 @@ const TRANSACTION_API = HOST + "/api/transactions";
 const BALANCE_API = HOST + "/api/balances";
 const PRICE_API = HOST + "/api/goldprice";
 const LATEST_PRICE = HOST + "/api/goldpricelatest";
-const UPDATE_INTERVAL = 10 * 60 * 1000; // 10 mins
+const UPDATE_INTERVAL = 600000;
 
 export {
   HOST,
