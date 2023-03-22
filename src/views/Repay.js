@@ -31,8 +31,6 @@ function Repay() {
   const handleSetDate = (event) => {
     const date = event.target.value;
     setDate(date);
-    // setDate(date.replaceAll("-", "/"));
-    // console.log(date);
   };
 
   const fetchTransactions = () => {};

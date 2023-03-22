@@ -28,7 +28,6 @@ const SheetImport = () => {
   const formatTransaction = (transactions) => {
     let dataChart = [];
     let totalMoney = 0;
-    let current_date = "";
 
     transactions.forEach(function (transaction) {
       let value = "";

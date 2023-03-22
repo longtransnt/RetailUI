@@ -18,7 +18,6 @@ import debtServices from "services/debtServices";
 function AddDebt() {
   const [totalAmount, setTotalAmount] = useState(0);
   const [employeeId, setEmployeeId] = useState(0);
-  const UPDATE_INTERVAL = 100000; // 10S
 
   const {
     register,

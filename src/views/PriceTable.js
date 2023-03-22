@@ -45,12 +45,7 @@ function PriceTable() {
   };
 
   useEffect(() => {
-    // getTime();
     getPrice();
-
-    setInterval(() => {
-      getPrice();
-    }, UPDATE_INTERVAL);
   }, []);
 
   return (

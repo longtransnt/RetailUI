@@ -4,7 +4,6 @@ import axios from "axios";
 import balanceServices from "../services/balanceServices";
 import transactionServices from "services/transactionServices";
 // react-bootstrap components
-import { UPDATE_INTERVAL } from "../constant";
 import {
   Badge,
   Button,
@@ -66,11 +65,6 @@ function Dashboard() {
   useEffect(() => {
     getBalance();
     getCurrentDebt();
-
-    setInterval(() => {
-      getBalance();
-      getCurrentDebt();
-    }, UPDATE_INTERVAL);
   }, []);
 
   return (
