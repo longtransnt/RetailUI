@@ -60,6 +60,7 @@ const Editor = () => {
               <Route path="sheetimport" element={<SheetImport />} />
               <Route path="price" element={<PriceTable />} />
               <Route path="addprice" element={<AddPrice />} />
+              <Route path="repay" element={<Repay />} />
             </Routes>
           </div>
           {/* <Footer /> */}

@@ -52,14 +52,14 @@ function PriceTable() {
     <>
       <Container fluid>
         <Row>
-          <Col md="2"></Col>
+          <Col md="1"></Col>
           <Col md="1">
             <img
               style={{ height: 100 }}
               src={require("./../assets/img/logo512.png")}
             />
           </Col>
-          <Col md="7">
+          <Col md="8">
             <h2 style={{ fontWeight: "bold", color: "orange" }}>
               DNTN Kinh Doanh Vàng và Cầm Đồ Trọng Nghĩa
             </h2>
@@ -95,7 +95,7 @@ function PriceTable() {
                           <td>
                             {item.name}
                             <p className="card-category">
-                              Cập nhật lúc: {item.time}
+                              Cập nhật ngày : {item.time}
                             </p>
                           </td>
 
