@@ -16,10 +16,26 @@ async function getAllEmployeeDebt() {
   return debts.data;
 }
 
-async function uploadDebts(id, list) {
+async function getAllEmployeeDebtNotOnDate(date) {
+  const debts = await axios.get(
+    DEBT_API + "/allEmployeeNotOnDate/" + date,
+    axiosConfig
+  );
+  return debts.data;
+}
+
+async function getAllEmployeeDebtOnDate(date) {
+  const debts = await axios.get(
+    DEBT_API + "/allEmployeeOnDate/" + date,
+    axiosConfig
+  );
+  return debts.data;
+}
+
+async function uploadDebts(list) {
   for (let item in list.debt) {
     let data = {
-      employee_id: id,
+      employee_id: list.debt[item].employeeId,
       amount: list.debt[item].amount,
       date: list.debt[item].date,
     };
@@ -41,4 +57,9 @@ async function getEmployeeTotalDebt(id) {
   const debts = await axios.get(DEBT_API + "/byEmployee/" + id, axiosConfig);
   return debts.data.rows;
 }
-export default { getAllEmployeeDebt, uploadDebts };
+export default {
+  getAllEmployeeDebt,
+  uploadDebts,
+  getAllEmployeeDebtNotOnDate,
+  getAllEmployeeDebtOnDate,
+};

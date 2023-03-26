@@ -28,15 +28,24 @@ async function postTransaction(data, type) {
   return transaction;
 }
 
-async function queryTransactionsByDateAndEmployee(type, date) {
-  const dateArray = date.split("-");
-  const newDate = dateArray[2] + "-" + dateArray[1] + "-" + dateArray[0];
-  console.log(newDate);
+async function queryTransactionsByTypeAndDate(type, date) {
+  // const dateArray = date.split("-");
+  // const newDate = dateArray[2] + "-" + dateArray[1] + "-" + dateArray[0];
+  // console.log(newDate);
   const transaction = await axios.get(
-    TRANSACTION_API + "/byTypeWithDate/" + type + "/" + newDate
+    TRANSACTION_API + "/byTypeWithDate/" + type + "/" + date
   );
   return transaction;
 }
+
+async function getTotalTransactionValue(type, date) {
+  const transactions = await axios.get(
+    TRANSACTION_API + "/totalValueByTypeOnDate/" + type + "/" + date,
+    axiosConfig
+  );
+  return transactions.data;
+}
+
 async function getAllTransactions() {
   const transactions = await axios.get(TRANSACTION_API, axiosConfig);
   return transactions.data.rows;
@@ -52,6 +61,7 @@ async function getAllTransactionsByType(type) {
 
 export default {
   postTransaction,
-  queryTransactionsByDateAndEmployee,
+  queryTransactionsByTypeAndDate,
   updateTransactionForEmployee,
+  getTotalTransactionValue,
 };

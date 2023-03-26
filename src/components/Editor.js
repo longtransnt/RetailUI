@@ -27,6 +27,8 @@ import Notifications from "views/Notifications";
 import Icons from "views/Icons";
 import Typography from "views/Typography";
 import Repay from "views/Repay";
+import Report from "views/DailyReport";
+import Report2 from "views/Report";
 
 const Editor = () => {
   const [image, setImage] = React.useState(sidebarImage);
@@ -61,6 +63,8 @@ const Editor = () => {
               <Route path="price" element={<PriceTable />} />
               <Route path="addprice" element={<AddPrice />} />
               <Route path="repay" element={<Repay />} />
+              <Route path="report" element={<Report />} />
+              <Route path="report2" element={<Report2 />} />
             </Routes>
           </div>
           {/* <Footer /> */}

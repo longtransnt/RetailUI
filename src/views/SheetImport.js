@@ -23,10 +23,12 @@ const SheetImport = () => {
   const [date2, setDate2] = useState("");
 
   const [data, setData] = useState([]);
+  const [dataExport, setDataExport] = useState([]);
   const [totalMoney, setTotalMoney] = useState(0);
 
   const formatTransaction = (transactions) => {
     let dataChart = [];
+    let dataChart2 = [];
     let totalMoney = 0;
 
     transactions.forEach(function (transaction) {
@@ -43,7 +45,6 @@ const SheetImport = () => {
           real_value: real,
         });
       } else if (bankFormat === "VCB") {
-        // console.log(transaction);
         if (+transaction["__EMPTY_1"]) {
           value = transaction["SAO KÊ TÀI KHOẢN\nSTATEMENT OF ACCOUNT"];
           real = parseFloat(value.replace(/,/g, ""));
@@ -51,28 +52,43 @@ const SheetImport = () => {
           if (value === "") {
             value = transaction["__EMPTY_3"];
             real = -1 * parseFloat(value.replace(/,/g, ""));
-            // console.log(real);
           }
 
           const day_array = transaction["__EMPTY_2"].split("\n");
+          const stringArray = day_array[0].split("/");
+          const format_date =
+            stringArray[2] + "-" + stringArray[1] + "-" + stringArray[0];
           dataChart.push({
             id: transaction["__EMPTY_1"],
-            date: day_array[0],
+            date: format_date,
             content: transaction["__EMPTY_5"],
+            filler1: "",
+            filler2: "",
             value: value,
             real_value: real,
           });
+
+          if (real > 0) {
+            dataChart2.push({
+              id: transaction["__EMPTY_1"],
+              date: format_date,
+              content: transaction["__EMPTY_5"],
+
+              filler1: "",
+              filler2: "",
+              value: value,
+              real_value: real,
+            });
+          }
         }
       } else if (bankFormat === "SCB") {
         // Get current transaction date
-
         const date_string = transaction["__EMPTY_4"].split(" ");
-
-        // console.log(date);
-        // console.log(secondDate);
-        // console.log(date_string[0]);
-        if (date1 !== "" && date_string[0] !== undefined) {
-          if (date_string[0] === date1 || date_string[0] === date2) {
+        const stringArray = date_string[0].split("-");
+        const format_date =
+          stringArray[2] + "-" + stringArray[1] + "-" + stringArray[0];
+        if (date1 !== "" && format_date !== undefined) {
+          if (format_date === date1 || format_date === date2) {
             // Get value and real value
             value = transaction["__EMPTY_18"] + "";
             real = parseFloat(value.replaceAll(".", ""));
@@ -81,51 +97,32 @@ const SheetImport = () => {
               value = transaction["__EMPTY_16"] + "";
               real = -1 * parseFloat(value.replaceAll(".", ""));
             }
-            const format_date = date_string[0].replaceAll("-", "/");
 
             // Push data in data frame
             dataChart.push({
               id: transaction["__EMPTY_1"],
               date: format_date,
               content: transaction["__EMPTY_12"],
+              filler1: "",
+              filler2: "",
               value: value,
               real_value: real,
             });
+
+            if (real > 0) {
+              // Push data export if real value is larger than 0
+              dataChart2.push({
+                id: transaction["__EMPTY_1"],
+                date: format_date,
+                content: transaction["__EMPTY_12"],
+                filler1: "",
+                filler2: "",
+                value: value,
+                real_value: real,
+              });
+            }
           }
         }
-
-        // // If the date has not been initialized, and the date string is not error
-        // if (current_date === "" && date_string[0] !== undefined) {
-        //   current_date = date_string[0];
-        // }
-
-        // // If the date is initialized, and current date stay the same
-        // if (
-        //   date_string[0] !== undefined &&
-        //   current_date !== "" &&
-        //   date_string[0] === current_date
-        // ) {
-        //   // Get value and real value
-        //   value = transaction["__EMPTY_18"] + "";
-        //   real = parseFloat(value.replaceAll(".", ""));
-
-        //   // If real value is error, check the negative error
-        //   if (value === "undefined") {
-        //     value = transaction["__EMPTY_16"] + "";
-        //     real = -1 * parseFloat(value.replaceAll(".", ""));
-        //   }
-
-        //   const format_date = current_date.replaceAll("-", "/");
-
-        //   // Push data in data frame
-        //   dataChart.push({
-        //     id: transaction["__EMPTY_1"],
-        //     date: format_date,
-        //     content: transaction["__EMPTY_12"],
-        //     value: value,
-        //     real_value: real,
-        //   });
-        // }
       }
       // Count total gain money and output to UI
       if (value !== undefined) {
@@ -134,14 +131,16 @@ const SheetImport = () => {
         }
       }
     });
-
+    dataChart2.push({
+      value: "Tổng Tiền",
+      real_value: totalMoney,
+    });
     setData(dataChart);
+    setDataExport(dataChart2);
     setTotalMoney(totalMoney);
-    // console.log(dataChart);
   };
 
   const handleImport = ($event) => {
-    // ".toast".toast(option);
     const files = $event.target.files;
     if (files.length) {
       const file = files[0];
@@ -166,7 +165,7 @@ const SheetImport = () => {
     }
   };
 
-  const handleExport = () => {
+  const handleUpload = () => {
     for (let index = 0; index < data.length; index++) {
       const element = data[index];
       transactionServices.postTransaction(element, bankFormat);
@@ -185,6 +184,26 @@ const SheetImport = () => {
         setDate1("" + dateArray[2] + "-" + dateArray[1] + "-" + dateArray[0]);
       }
     }
+  };
+
+  const handleExport = () => {
+    const headings = [
+      [
+        "STT",
+        "Ngày",
+        "Nội Dung",
+        "Nhân Viên",
+        "Trong Ngày",
+        "Số Tiền GĐ",
+        "Số Tiền Thực",
+      ],
+    ];
+    const wb = utils.book_new();
+    const ws = utils.json_to_sheet([]);
+    utils.sheet_add_aoa(ws, headings);
+    utils.sheet_add_json(ws, dataExport, { origin: "A2", skipHeader: true });
+    utils.book_append_sheet(wb, ws, "Report");
+    writeFile(wb, "transaction Report.xlsx");
   };
 
   return (
@@ -212,9 +231,9 @@ const SheetImport = () => {
             <Form.Control
               type="date"
               onChange={(e) => {
-                formatDate(e, false);
+                setDate1(e.target.value);
               }}
-              value={date}
+              value={date1}
             />
           </Col>
           <Col className="pr-1" md="4">
@@ -222,9 +241,9 @@ const SheetImport = () => {
             <Form.Control
               type="date"
               onChange={(e) => {
-                formatDate(e, true);
+                setDate2(e.target.value);
               }}
-              value={secondDate}
+              value={date2}
             />
           </Col>
           <Col className="pr-1" md="4">
@@ -241,16 +260,6 @@ const SheetImport = () => {
                 />
               </div>
             </div>
-
-            {/* <div className="row mb-2 mt-5">
-              <div className="col-sm-6 offset-3">
-                <div className="row">
-                  <div className="col-md-4">
-                    
-                  </div>
-                </div>
-              </div>
-            </div> */}
           </Col>
 
           <Col>
@@ -267,10 +276,20 @@ const SheetImport = () => {
           <Col>
             <span>
               <button
-                onClick={handleExport}
+                onClick={handleUpload}
                 className="btn btn-primary float-right"
               >
                 Tải lên CSDL <i className="fa fa-upload"></i>
+              </button>
+            </span>
+          </Col>
+          <Col>
+            <span>
+              <button
+                onClick={handleExport}
+                className="btn btn-primary float-right"
+              >
+                Tải Về <i className="fa fa-download"></i>
               </button>
             </span>
           </Col>

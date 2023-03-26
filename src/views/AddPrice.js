@@ -2,35 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 
 // react-bootstrap components
-import {
-  Badge,
-  Button,
-  Card,
-  Form,
-  Navbar,
-  Nav,
-  Container,
-  Row,
-  Col,
-} from "react-bootstrap";
+import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
 import priceSerivces from "services/priceSerivces";
 
 function AddPrice() {
-  const [totalAmount, setTotalAmount] = useState(0);
-  const [employeeId, setEmployeeId] = useState(0);
   const [goldprice, setGoldPrice] = useState([]);
 
-  const {
-    register,
-    control,
-    handleSubmit,
-    reset,
-    trigger,
-    setError,
-    getValues,
-  } = useForm({
-    // defaultValues: {}; you can populate the fields by this attribute
-  });
+  const { register, control, handleSubmit } = useForm({});
   const { fields, append, remove } = useFieldArray({
     control,
     name: "price",
