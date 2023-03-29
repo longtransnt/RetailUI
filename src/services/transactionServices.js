@@ -29,9 +29,6 @@ async function postTransaction(data, type) {
 }
 
 async function queryTransactionsByTypeAndDate(type, date) {
-  // const dateArray = date.split("-");
-  // const newDate = dateArray[2] + "-" + dateArray[1] + "-" + dateArray[0];
-  // console.log(newDate);
   const transaction = await axios.get(
     TRANSACTION_API + "/byTypeWithDate/" + type + "/" + date
   );

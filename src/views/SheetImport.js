@@ -62,8 +62,6 @@ const SheetImport = () => {
             id: transaction["__EMPTY_1"],
             date: format_date,
             content: transaction["__EMPTY_5"],
-            filler1: "",
-            filler2: "",
             value: value,
             real_value: real,
           });
@@ -73,9 +71,6 @@ const SheetImport = () => {
               id: transaction["__EMPTY_1"],
               date: format_date,
               content: transaction["__EMPTY_5"],
-
-              filler1: "",
-              filler2: "",
               value: value,
               real_value: real,
             });
@@ -83,6 +78,7 @@ const SheetImport = () => {
         }
       } else if (bankFormat === "SCB") {
         // Get current transaction date
+        console.log(transaction);
         const date_string = transaction["__EMPTY_4"].split(" ");
         const stringArray = date_string[0].split("-");
         const format_date =
@@ -103,8 +99,6 @@ const SheetImport = () => {
               id: transaction["__EMPTY_1"],
               date: format_date,
               content: transaction["__EMPTY_12"],
-              filler1: "",
-              filler2: "",
               value: value,
               real_value: real,
             });
@@ -115,8 +109,6 @@ const SheetImport = () => {
                 id: transaction["__EMPTY_1"],
                 date: format_date,
                 content: transaction["__EMPTY_12"],
-                filler1: "",
-                filler2: "",
                 value: value,
                 real_value: real,
               });
@@ -188,15 +180,7 @@ const SheetImport = () => {
 
   const handleExport = () => {
     const headings = [
-      [
-        "STT",
-        "Ngày",
-        "Nội Dung",
-        "Nhân Viên",
-        "Trong Ngày",
-        "Số Tiền GĐ",
-        "Số Tiền Thực",
-      ],
+      ["STT", "Ngày", "Nội Dung", "Số Tiền GĐ", "Số Tiền Thực"],
     ];
     const wb = utils.book_new();
     const ws = utils.json_to_sheet([]);

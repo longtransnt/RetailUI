@@ -30,6 +30,8 @@ import User from "views/UserProfile";
 import AddPrice from "views/AddPrice";
 import SheetImport from "views/SheetImport";
 import AddDebt from "views/AddDebt";
+import Report from "views/Report";
+import ViewReport from "views/ViewReport";
 const dashboardRoutes = [
   {
     path: "/price",
@@ -53,17 +55,17 @@ const dashboardRoutes = [
     layout: "/editor",
   },
   {
-    path: "/adddebt",
-    name: "Quản Lý Nợ",
+    path: "/report",
+    name: "Báo Cáo Hàng Ngày",
     icon: "nc-icon nc-ruler-pencil",
-    component: AddDebt,
+    component: Report,
     layout: "/editor",
   },
   {
-    path: "/repay",
-    name: "Trả Nợ",
+    path: "/view_report",
+    name: "Xem Báo Cáo",
     icon: "nc-icon nc-money-coins",
-    component: AddDebt,
+    component: ViewReport,
     layout: "/editor",
   },
 ];

@@ -1,30 +1,36 @@
 import React, { useState } from "react";
 
 // react-bootstrap components
-import {
-  Badge,
-  Button,
-  Card,
-  Form,
-  Navbar,
-  Nav,
-  Container,
-  Row,
-  Col,
-} from "react-bootstrap";
+import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
+import balanceServices from "services/balanceServices";
 import debtServices from "services/debtServices";
 import transactionServices from "services/transactionServices";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { redirect } from "react-router-dom";
 
-function Report2() {
+function Report() {
+  const { register, control, handleSubmit, getValues } = useForm({
+    // defaultValues: {}; you can populate the fields by this attribute
+  });
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "debt",
+  });
   const [bankAmount1, setBankAmount1] = useState(0);
   const [bankAmount2, setBankAmount2] = useState(0);
+  const [income1, setIncome1] = useState(0);
+  const [income2, setIncome2] = useState(0);
+  const [softwareIncome, setSoftwareIncome] = useState(0);
+  const [cashIncome, setCashIncome] = useState(0);
+  const [saleAmount, setSaleAmount] = useState(0);
+  const [totalSpend, setTotalSpend] = useState(0);
+
   const [date, setDate] = useState("");
   const [dateArray, setDateArray] = useState(["YYYY", "MM", "DD"]);
   const [nextDate, setNextDate] = useState("");
   const [debt, setDebt] = useState([]);
 
   const handleDateChange = async (event) => {
-    // Fetch bank sum
     setDebt([]);
     const target = event.target.value;
     const array = target.split("-");
@@ -33,7 +39,8 @@ function Report2() {
     setNextDate(Number(array[2]) + 1);
 
     const debts = await debtServices.getAllEmployeeDebtOnDate(target);
-    setDebt(debts);
+    // setDebt(debts);
+    console.log(debts);
 
     const bank1 = await transactionServices.getTotalTransactionValue(
       "SCB",
@@ -47,6 +54,26 @@ function Report2() {
     );
     setBankAmount2(bank2.value);
   };
+
+  const handleUpload = async () => {
+    const balance = bankAmount1 + bankAmount2 - totalSpend;
+    const data = {
+      software_balance: softwareIncome,
+      cash_balance: cashIncome,
+      date: date,
+      total_spend: totalSpend,
+      bank_balance1: bankAmount1,
+      bank_balance2: bankAmount2,
+      shop_income1: income1,
+      shop_income2: income2,
+      balance: balance,
+      sale_amount: saleAmount,
+    };
+    // console.log(data);
+
+    const response = await balanceServices.postBalance(data);
+    // console.log(response);
+  };
   return (
     <>
       <Container fluid>
@@ -57,7 +84,13 @@ function Report2() {
                 <Card.Title as="h4">Báo Cáo Chuyển Khoảng, Thu Chi</Card.Title>
               </Card.Header>
               <Card.Body>
-                <Form>
+                <Form
+                  onSubmit={handleSubmit(async (data) => {
+                    await debtServices.uploadDebts(data, date);
+                    await handleUpload();
+                    alert("Báo Cáo Đã Được Lưu Lại");
+                  })}
+                >
                   <Row>
                     <Col className="pr-1" md="2">
                       <Form.Group>
@@ -74,9 +107,9 @@ function Report2() {
                       <Form.Group>
                         <label>Tổng Chi</label>
                         <Form.Control
-                          defaultValue={5000000}
-                          placeholder=""
+                          onChange={(e) => setTotalSpend(e.target.value)}
                           type="number"
+                          value={totalSpend}
                         ></Form.Control>
                       </Form.Group>
                     </Col>
@@ -86,8 +119,8 @@ function Report2() {
                           Tiền Phượng {dateArray[2] + "/" + dateArray[1]}
                         </label>
                         <Form.Control
-                          defaultValue={500000}
-                          placeholder=""
+                          value={income1}
+                          onChange={(e) => setIncome1(e.target.value)}
                           type="number"
                         ></Form.Control>
                       </Form.Group>
@@ -98,29 +131,12 @@ function Report2() {
                           Tiền Phượng {nextDate + "/" + dateArray[1]}
                         </label>
                         <Form.Control
-                          defaultValue={500000}
-                          placeholder=""
+                          value={income2}
+                          onChange={(e) => setIncome2(e.target.value)}
                           type="number"
                         ></Form.Control>
                       </Form.Group>
                     </Col>
-                  </Row>
-                  <Row>
-                    {debt.map((item, key) => {
-                      return (
-                        <Col className="pl-1" md="2" key={key}>
-                          <Form.Group>
-                            <label>{item.name}</label>
-                            <Form.Control
-                              defaultValue={item.totalDebt}
-                              placeholder=""
-                              type="number"
-                              disabled
-                            ></Form.Control>
-                          </Form.Group>
-                        </Col>
-                      );
-                    })}
                   </Row>
 
                   <Row>
@@ -128,8 +144,8 @@ function Report2() {
                       <Form.Group>
                         <label>Tổng Phần Mềm</label>
                         <Form.Control
-                          defaultValue={5000000}
-                          placeholder=""
+                          value={softwareIncome}
+                          onChange={(e) => setSoftwareIncome(e.target.value)}
                           type="number"
                         ></Form.Control>
                       </Form.Group>
@@ -140,7 +156,8 @@ function Report2() {
                           Tổng Thu Được
                         </label>
                         <Form.Control
-                          placeholder=""
+                          value={cashIncome}
+                          onChange={(e) => setCashIncome(e.target.value)}
                           type="number"
                         ></Form.Control>
                       </Form.Group>
@@ -149,8 +166,8 @@ function Report2() {
                       <Form.Group>
                         <label htmlFor="exampleInputEmail1">Số Món Bán</label>
                         <Form.Control
-                          defaultValue={256}
-                          placeholder=""
+                          value={saleAmount}
+                          onChange={(e) => setSaleAmount(e.target.value)}
                           type="number"
                         ></Form.Control>
                       </Form.Group>
@@ -181,7 +198,8 @@ function Report2() {
                       <Form.Group>
                         <label>Tổng Chuyển Khoảng</label>
                         <Form.Control
-                          defaultValue={bankAmount1 + bankAmount2}
+                          value={bankAmount1 + bankAmount2}
+                          // defaultValue={bankAmount1 + bankAmount2}
                           placeholder=""
                           type="number"
                           disabled
@@ -189,84 +207,81 @@ function Report2() {
                       </Form.Group>
                     </Col>
                   </Row>
+                  <Row>
+                    <label>Nợ:</label>
+                    <ul>
+                      {fields.map((item, index) => (
+                        <li key={item.id}>
+                          <Row>
+                            <Col className="pr-1" md="2">
+                              <Form.Control
+                                as="select"
+                                {...register(`debt.${index}.employeeId`)}
+                              >
+                                <option defaultValue="0"> - Nhân Viên -</option>
+                                <option value="1">Nhật</option>
+                                <option value="2">Kim Chi</option>
+                                <option value="3">Út (Hải)</option>
+                                <option value="4">Tiên</option>
+                                <option value="5">Thu</option>
+                                <option value="6">K.Cương</option>
+                                <option value="7">Mi</option>
+                                <option value="8">Hà</option>
+                              </Form.Control>
+                            </Col>
+                            <Col className="p-1" md="2">
+                              <Controller
+                                render={({ field }) => (
+                                  <Form.Control {...field} />
+                                )}
+                                name={`debt.${index}.amount`}
+                                control={control}
+                              />
+                            </Col>
 
-                  <Button
-                    className="btn-fill pull-right"
-                    type="submit"
-                    variant="info"
-                  >
-                    Update Profile
-                  </Button>
-                  <div className="clearfix"></div>
+                            <Col className="pl-1" md="3">
+                              <Button
+                                className="btn-fill pull-right"
+                                variant="danger"
+                                type="button"
+                                onClick={() => remove(index)}
+                              >
+                                Xoá
+                              </Button>
+                            </Col>
+                          </Row>
+                        </li>
+                      ))}
+                    </ul>
+                  </Row>
+
+                  <div class="buttonrow">
+                    <br />
+                    <Button
+                      className="btn-fill pull-right"
+                      variant="secondary"
+                      type="button"
+                      onClick={() => append({ amount: "0" })}
+                    >
+                      Thêm Nợ
+                    </Button>
+                    <Button
+                      className="btn-fill pull-right"
+                      variant="info"
+                      type="submit"
+                    >
+                      Xác Nhận
+                    </Button>
+                  </div>
+                  {/* <div className="clearfix"></div> */}
                 </Form>
               </Card.Body>
             </Card>
           </Col>
-          {/* <Col md="4">
-            <Card>
-              <Card.Header>
-                <Card.Title as="h4">Nợ Tỉnh</Card.Title>
-              </Card.Header>
-              <Card.Body>
-                <Row>
-                  <Col className="pr-1" md="6">
-                    <Form.Group>
-                      <label>Nhật</label>
-                      <Form.Control
-                        defaultValue={50000000}
-                        placeholder=""
-                        type="number"
-                        disabled
-                      ></Form.Control>
-                    </Form.Group>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col className="pr-1" md="6">
-                    <Form.Group>
-                      <label>Chi</label>
-                      <Form.Control
-                        defaultValue={50000000}
-                        placeholder=""
-                        type="number"
-                        disabled
-                      ></Form.Control>
-                    </Form.Group>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col className="pr-1" md="6">
-                    <Form.Group>
-                      <label>Phượng</label>
-                      <Form.Control
-                        defaultValue={50000000}
-                        placeholder=""
-                        type="number"
-                        disabled
-                      ></Form.Control>
-                    </Form.Group>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col className="pr-1" md="6">
-                    <Form.Group>
-                      <label>Hà</label>
-                      <Form.Control
-                        defaultValue={50000000}
-                        placeholder=""
-                        type="number"
-                        disabled
-                      ></Form.Control>
-                    </Form.Group>
-                  </Col>
-                </Row>
-              </Card.Body>
-            </Card>
-          </Col> */}
         </Row>
       </Container>
     </>
   );
 }
 
-export default Report2;
+export default Report;

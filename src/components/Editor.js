@@ -9,13 +9,10 @@ import {
   matchPath,
 } from "react-router-dom";
 
-import AdminNavbar from "components/Navbars/AdminNavbar";
-import Footer from "components/Footer/Footer";
 import Sidebar from "components/Sidebar/Sidebar";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 import PriceTable from "views/PriceTable";
 import routes from "../routes/editorroutes";
-import addDebts from "views/AddDebt";
 import sidebarImage from "assets/img/sidebar-3.jpg";
 import Dashboard from "views/Dashboard";
 import User from "views/UserProfile";
@@ -27,9 +24,10 @@ import Notifications from "views/Notifications";
 import Icons from "views/Icons";
 import Typography from "views/Typography";
 import Repay from "views/Repay";
-import Report from "views/DailyReport";
-import Report2 from "views/Report";
-
+import Report from "views/Report";
+import ViewReport from "views/ViewReport";
+import TableList from "views/TableList";
+// import ReportTemp from "views/Temp";
 const Editor = () => {
   const [image, setImage] = React.useState(sidebarImage);
   const [color, setColor] = React.useState("black");
@@ -64,7 +62,7 @@ const Editor = () => {
               <Route path="addprice" element={<AddPrice />} />
               <Route path="repay" element={<Repay />} />
               <Route path="report" element={<Report />} />
-              <Route path="report2" element={<Report2 />} />
+              <Route path="view_report" element={<ViewReport />} />
             </Routes>
           </div>
           {/* <Footer /> */}

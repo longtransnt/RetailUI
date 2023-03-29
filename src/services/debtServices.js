@@ -25,19 +25,21 @@ async function getAllEmployeeDebtNotOnDate(date) {
 }
 
 async function getAllEmployeeDebtOnDate(date) {
+  console.log(date);
   const debts = await axios.get(
     DEBT_API + "/allEmployeeOnDate/" + date,
     axiosConfig
   );
+  console.log(debts.data);
   return debts.data;
 }
 
-async function uploadDebts(list) {
+async function uploadDebts(list, date) {
   for (let item in list.debt) {
     let data = {
       employee_id: list.debt[item].employeeId,
       amount: list.debt[item].amount,
-      date: list.debt[item].date,
+      date: date,
     };
     await axios
       .post(DEBT_API, data, axiosConfig)

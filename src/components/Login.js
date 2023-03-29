@@ -63,7 +63,15 @@ const Login = () => {
   };
 
   return (
-    <input_form>
+    <div
+      style={{
+        position: "absolute",
+        left: "50%",
+        top: "50%",
+        width: "100vh",
+        transform: "translate(-50%, -50%)",
+      }}
+    >
       <Container fluid>
         <p
           ref={errRef}
@@ -73,7 +81,7 @@ const Login = () => {
           {errMsg}
         </p>
         <Row>
-          <Col md="8">
+          <Col md="12">
             <Card>
               <Card.Header>
                 <Card.Title as="h4">Đăng Nhập</Card.Title>
@@ -142,7 +150,7 @@ const Login = () => {
           </Col>
         </Row>
       </Container>
-    </input_form>
+    </div>
   );
 };
 
